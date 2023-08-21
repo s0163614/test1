@@ -1,25 +1,19 @@
-<?php
-// несколько получателей
-$to  = 'sirodzhovss@mail.ru' . ', ';  // обратите внимание на запятую
-
-
-// тема письма
-$subject = 'Письмо с моего сайта';
-
-// текст письма
-$message = 'Пользователь' . $_POST['name'] . ' отправил вам письмо:<br />' . $_POST['message'] . '<br />
-Связяться с ним можно по email <a href="mailto:' . $_POST['email'] . '">' . $_POST['email'] . '</a>'
-;
-
-// Для отправки HTML-письма должен быть установлен заголовок Content-type
-$headers  = 'MIME-Version: 1.0' . "\r\n";
-$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n"; 
-
-// Дополнительные заголовки
-$headers .= 'To: Иван <sirodjov33@gmail.com>' . "\r\n"; // Свое имя и email
-$headers .= 'From: '  . $_POST['name'] . '<' . $_POST['email'] . '>' . "\r\n";
-
-
-// Отправляем
-mail($to, $subject, $message, $headers);
+<?
+if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' && !empty($_POST['name'])) {
+    $message = 'Имя: ' . $_POST['name'] . ' ';
+    $message .= 'Телефон: ' . $_POST['phone'] . ' ';
+    if(!empty($_POST['text'])) {
+        $message .= 'Текст: ' . $_POST['text'] . ' ';
+    }
+    $mailTo = "sirodzhovss@mail.ru"; // Ваш e-mail
+    $subject = "Письмо с сайта"; // Тема сообщения
+    $headers= "MIME-Version: 1.0\r\n";
+    $headers .= "Content-type: text/html; charset=utf-8\r\n";
+    $headers .= "From: sirodjov33@gmail.com <info@site.ru>\r\n";
+    if(mail($mailTo, $subject, $message, $headers)) {
+        echo "Спасибо, ".$_POST['name'].", мы свяжемся с вами в самое ближайшее время!"; 
+    } else {
+        echo "Сообщение не отправлено!"; 
+    }
+}
 ?>
